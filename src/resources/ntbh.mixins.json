@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"package": "net.mahiron47.ntbh.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"MinecraftServerMixin",
+		"MinecraftClientMixin",
+	
+		"gui.ScreenMixin",
+
+		"gui.TitleScreenMixin",
+		"gui.CreateWorldScreenMixin",
+		"gui.OptionsScreenMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

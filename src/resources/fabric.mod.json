@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "ntbh",
+	"version": "${version}",
+	"name": "NTBHcore",
+	"description": "NTBH modpack core mod",
+	"authors": [
+		"Mahiron47"
+	],
+	"contact": {
+		"homepage": "https://github.com/FCI-FutaCockIndustries/NTBelowHorizons",
+		"sources": "https://github.com/FCI-FutaCockIndustries/NTBHcore"
+	},
+	"license": "MIT",
+	"icon": "assets/ntbh/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"net.mahiron47.ntbh.NTBHClient"
+		],
+		"main": [
+			"net.mahiron47.ntbh.NTBH"
+		],
+		"fabric-datagen": [
+			"net.mahiron47.ntbh.NTBHDataGenerator"
+		]
+	},
+	"mixins": [
+		"ntbh.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
