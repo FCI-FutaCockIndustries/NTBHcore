@@ -10,7 +10,15 @@
 
 		"gui.TitleScreenMixin",
 		"gui.CreateWorldScreenMixin",
-		"gui.OptionsScreenMixin"
+		"gui.OptionsScreenMixin",
+		"gui.EntryListWidgetMixin",
+		"gui.ControlsOptionsScreenMixin",
+		"gui.SkinOptionsScreenMixin",
+		"gui.TelemetryInfoScreenMixin",
+		"gui.CreditsAndAttributionScreenMixin",
+		"gui.ConfirmScreenMixin",
+		"gui.SelectWorldScreenMixin",
+		"gui.WarningScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

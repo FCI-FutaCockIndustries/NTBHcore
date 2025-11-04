@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import net.mahiron47.ntbh.utils.GUIData;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 
@@ -20,11 +21,9 @@ public abstract class ScreenMixin {
 	 */
 	@Overwrite
     public void renderBackground(DrawContext context) {
-		//if (this.client.world != null) {
-		//	context.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
-		//} else {
-			this.renderBackgroundTexture(context);
-		//}
+		context.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
+		this.renderBackgroundTexture(context);
+		context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	/**
@@ -33,8 +32,6 @@ public abstract class ScreenMixin {
 	 */
 	@Overwrite
 	public void renderBackgroundTexture(DrawContext context) {
-		context.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
-		//context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 32, 32);
-		context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		context.drawTexture(GUIData.PANORAMA_OVERLAY, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 	}
 }

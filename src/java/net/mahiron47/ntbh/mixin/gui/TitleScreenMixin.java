@@ -3,11 +3,18 @@ package net.mahiron47.ntbh.mixin.gui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.Overwrite;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
 import org.spongepowered.asm.mixin.Final;
 
-import net.mahiron47.ntbh.utils.interfaces.TitleScreenIAccessor;
+import net.mahiron47.ntbh.utils.GUIData;
+import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,17 +27,11 @@ import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 @Mixin(TitleScreen.class)
-public abstract class TitleScreenMixin extends Screen implements TitleScreenIAccessor {
-    @Shadow @Final
-    private RotatingCubeMapRenderer backgroundRenderer;
-    
-    @Shadow @Final
-    private static Identifier PANORAMA_OVERLAY;
-    
+public abstract class TitleScreenMixin extends Screen {
     @Shadow @Final
     public static Text COPYRIGHT;
 
@@ -45,9 +46,9 @@ public abstract class TitleScreenMixin extends Screen implements TitleScreenIAcc
         super(Text.translatable("title.screen"));
     }
 
-	@Override
-	public RotatingCubeMapRenderer getBackgroundRenderer() {
-		return this.backgroundRenderer;
+	@Inject(method = "initWidgetsNormal", at = @At("HEAD"))
+	private void onInit(int y, int spacingY, CallbackInfo ci) {
+		this.client.options.skipMultiplayerWarning = true;
 	}
 
 	// TODO: Integrate modmenu mod
@@ -62,6 +63,20 @@ public abstract class TitleScreenMixin extends Screen implements TitleScreenIAcc
                 .build()
         );
     }
+
+	@Redirect(method = "render", 
+			  at = @At(value = "INVOKE", 
+					   target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V"))
+	private void redirectRenderBackground(RotatingCubeMapRenderer instance, float delta, float alpha) {
+		GUIData.BACKGROUND_RENDERER.render(delta, alpha);	
+	}
+
+	@Redirect(method = "loadTexturesAsync",
+			  at = @At(value = "INVOKE",
+					   target = "Lnet/minecraft/client/gui/CubeMapRenderer;loadTexturesAsync(Lnet/minecraft/client/texture/TextureManager;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
+	private static CompletableFuture<Void> redirectLoadTexturesAsync(CubeMapRenderer instance, TextureManager textureManager, Executor executor) {
+		return GUIData.PANORAMA_CUBE_MAP.loadTexturesAsync(textureManager, executor);
+	}
 
     /**
      * @author Mahiron47
