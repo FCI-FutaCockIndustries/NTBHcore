@@ -18,7 +18,10 @@
 		"gui.CreditsAndAttributionScreenMixin",
 		"gui.ConfirmScreenMixin",
 		"gui.SelectWorldScreenMixin",
-		"gui.WarningScreenMixin"
+		"gui.WarningScreenMixin",
+		"gui.LevelLoadingScreenMixin",
+		"gui.WorldGenerationProgressScreenMixin",
+		"gui.MessageScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
