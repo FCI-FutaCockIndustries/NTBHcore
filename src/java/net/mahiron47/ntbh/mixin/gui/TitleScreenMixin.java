@@ -39,45 +39,41 @@ public abstract class TitleScreenMixin extends Screen {
     private SplashTextRenderer splashText;
 
     @Shadow
-    abstract void initWidgetsNormal(int y, int spacingY);
+    protected abstract void initWidgetsNormal(int y, int spacingY);
 
-    // Конструктор для наследования от Screen
     protected TitleScreenMixin() {
-        super(Text.translatable("title.screen"));
+        super(null);
     }
-
 	@Inject(method = "initWidgetsNormal", at = @At("HEAD"))
 	private void onInit(int y, int spacingY, CallbackInfo ci) {
-		this.client.options.skipMultiplayerWarning = true;
+        assert this.client != null;
+        this.client.options.skipMultiplayerWarning = true;
 	}
-
-	// TODO: Integrate modmenu mod
+	// TODO: Integrate mod menu mod
     @Redirect(method = "initWidgetsNormal", 
               at = @At(value = "INVOKE", 
                        target = "Lnet/minecraft/client/gui/screen/TitleScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;",
 					   ordinal = 2))
     private Element redirectAddDrawableChild(TitleScreen instance, Element drawableElement) {
         return this.addDrawableChild(
+            //TODO: Change action and create translation
             ButtonWidget.builder(Text.translatable("menu.mods"), btn -> System.out.println("Mods clicked"))
                 .dimensions(((ButtonWidget)drawableElement).getX(), ((ButtonWidget)drawableElement).getY(), ((ButtonWidget)drawableElement).getWidth(), ((ButtonWidget)drawableElement).getHeight())
                 .build()
         );
     }
-
 	@Redirect(method = "render", 
 			  at = @At(value = "INVOKE", 
 					   target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V"))
 	private void redirectRenderBackground(RotatingCubeMapRenderer instance, float delta, float alpha) {
 		GUIData.BACKGROUND_RENDERER.render(delta, alpha);	
 	}
-
 	@Redirect(method = "loadTexturesAsync",
 			  at = @At(value = "INVOKE",
 					   target = "Lnet/minecraft/client/gui/CubeMapRenderer;loadTexturesAsync(Lnet/minecraft/client/texture/TextureManager;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
 	private static CompletableFuture<Void> redirectLoadTexturesAsync(CubeMapRenderer instance, TextureManager textureManager, Executor executor) {
 		return GUIData.PANORAMA_CUBE_MAP.loadTexturesAsync(textureManager, executor);
 	}
-
     /**
      * @author Mahiron47
      * @reason reduce number of conditions, cut realms
@@ -85,7 +81,8 @@ public abstract class TitleScreenMixin extends Screen {
     @Overwrite
     public void init() {
 		if (this.splashText == null) {
-			this.splashText = this.client.getSplashTextLoader().get();
+            assert this.client != null;
+            this.splashText = this.client.getSplashTextLoader().get();
 		}
 
 		int i = this.textRenderer.getWidth(COPYRIGHT);
@@ -106,17 +103,26 @@ public abstract class TitleScreenMixin extends Screen {
 				ButtonWidget.WIDGETS_TEXTURE,
 				256,
 				256,
-				button -> this.client.setScreen(new LanguageOptionsScreen(this, this.client.options, this.client.getLanguageManager())),
+				button -> {
+                    assert this.client != null;
+                    this.client.setScreen(new LanguageOptionsScreen(this, this.client.options, this.client.getLanguageManager()));
+                },
 				Text.translatable("narrator.button.language")
 			)
 		);
 		this.addDrawableChild(
-			ButtonWidget.builder(Text.translatable("menu.options"), button -> this.client.setScreen(new OptionsScreen(this, this.client.options)))
+			ButtonWidget.builder(Text.translatable("menu.options"), button -> {
+                        assert this.client != null;
+                        this.client.setScreen(new OptionsScreen(this, this.client.options));
+                    })
 				.dimensions(this.width / 2 - 100, l + 72 + 12, 98, 20)
 				.build()
 		);
 		this.addDrawableChild(
-			ButtonWidget.builder(Text.translatable("menu.quit"), button -> this.client.scheduleStop()).dimensions(this.width / 2 + 2, l + 72 + 12, 98, 20).build()
+			ButtonWidget.builder(Text.translatable("menu.quit"), button -> {
+                assert this.client != null;
+                this.client.scheduleStop();
+            }).dimensions(this.width / 2 + 2, l + 72 + 12, 98, 20).build()
 		);
 		this.addDrawableChild(
 			new TexturedButtonWidget(
@@ -130,12 +136,18 @@ public abstract class TitleScreenMixin extends Screen {
 				ButtonWidget.ACCESSIBILITY_TEXTURE,
 				32,
 				64,
-				button -> this.client.setScreen(new AccessibilityOptionsScreen(this, this.client.options)),
+				button -> {
+                    assert this.client != null;
+                    this.client.setScreen(new AccessibilityOptionsScreen(this, this.client.options));
+                },
 				Text.translatable("narrator.button.accessibility")
 			)
 		);
 		this.addDrawableChild(
-			new PressableTextWidget(j, this.height - 10, i, 10, COPYRIGHT, button -> this.client.setScreen(new CreditsAndAttributionScreen(this)), this.textRenderer)
+			new PressableTextWidget(j, this.height - 10, i, 10, COPYRIGHT, button -> {
+                assert this.client != null;
+                this.client.setScreen(new CreditsAndAttributionScreen(this));
+            }, this.textRenderer)
 		);
 	}
 }

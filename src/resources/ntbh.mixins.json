@@ -20,13 +20,16 @@
 		"gui.SelectWorldScreenMixin",
 		"gui.WarningScreenMixin",
 		"gui.LevelLoadingScreenMixin",
-		"gui.WorldGenerationProgressScreenMixin",
-		"gui.MessageScreenMixin"
+		"gui.DownloadingTerrainScreenMixin",
+		"gui.MessageScreenMixin",
+        "gui.AddServerScreenMixin",
+        "gui.ConnectScreenMixin",
+        "gui.DirectConnectScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
 	},
 	"overwrites": {
-		"requireAnnotations": true
+		"requireAnnotations": false
 	}
 }

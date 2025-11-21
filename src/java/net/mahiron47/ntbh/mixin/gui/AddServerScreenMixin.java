@@ -1,30 +1,25 @@
 package net.mahiron47.ntbh.mixin.gui;
 
-import org.spongepowered.asm.mixin.Mixin;
-
 import net.mahiron47.ntbh.utils.GUIData;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.AddServerScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
-import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/*
- * Работает, не трогать
- */
-@Mixin(OptionsScreen.class)
-public abstract class OptionsScreenMixin extends Screen {
-    protected OptionsScreenMixin() {
-		super(Text.translatable("options.title"));
-	}
+@Mixin(value = AddServerScreen.class)
+public class AddServerScreenMixin extends Screen {
+    protected AddServerScreenMixin() {
+        super(null);
+    }
     @Redirect(method = "render",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/client/gui/screen/option/OptionsScreen;renderBackground(Lnet/minecraft/client/gui/DrawContext;)V",
+                       target = "Lnet/minecraft/client/gui/screen/AddServerScreen;renderBackground(Lnet/minecraft/client/gui/DrawContext;)V",
                        ordinal = 0))
-    public void onRender(OptionsScreen screen, DrawContext context) {
+    public void onRender(AddServerScreen screen, DrawContext context) {
         //nothing
     }
     @Inject(method = "render", at = @At("HEAD"))
